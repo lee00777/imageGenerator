@@ -1,10 +1,15 @@
 import React from 'react';
 
-export default function RootLayout() {
+// children을 {}로 감싼 이유는 destruction 때문임. 즉, children.id 이렇게 접근하는 대신 바로 id로 접근하기 위해서임.
+
+export default function RootLayout({children}:{children:React.ReactNode}) {
   return (
-    <div>
-      
-    </div>
+    <main className="root">
+      <div className='root-container'>
+        <div className='wrapper'>
+          {children}
+        </div>
+      </div>
+    </main>
   );
 }
-
