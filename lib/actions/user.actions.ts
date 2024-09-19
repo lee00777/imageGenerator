@@ -6,7 +6,7 @@ import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 
-// 서버 코드 : mongoDB에 User model관련 doc 만들고 가져오고 수정하고 삭제하는 functions
+// 서버 코드 (백엔드) : mongoDB에 User model관련 doc 만들고 가져오고 수정하고 삭제하는 functions
 
 // CREATE
 export async function createUser(user: CreateUserParams) {
