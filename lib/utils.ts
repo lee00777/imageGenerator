@@ -1,8 +1,14 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-prototype-builtins */
+
 import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import qs from "qs";
+import { twMerge } from "tailwind-merge";
+
+import { aspectRatioOptions } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // ERROR HANDLER
