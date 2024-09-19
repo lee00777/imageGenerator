@@ -10,10 +10,12 @@ interface MongooseConnection {
 }
 
 // [2] cached = global.mongoose // global은 노드의 browser의 window 객체의 개념. global에 mongoose라는 객체를 추가하는 것임..
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let cached: MongooseConnection = (global as any).mongoose
 
 if(!cached) {
   // [1] 맨 처음 or 캐쉬된게 없다면 => global object에 mongoose를 추가하고, cached = global.mongoose={conn:null, promise:null}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cached = (global as any).mongoose = { 
     conn: null, promise: null 
   }
