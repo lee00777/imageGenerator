@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { defaultValues } from "@/constants"
+import { aspectRatioOptions, defaultValues, transformationTypes } from "@/constants"
 import { Form } from "../ui/form";
 import { CustomField } from "./CustomField"
 import { Input } from "../ui/input"
@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useState } from "react"
 
 
 // form validation schema 작성
@@ -25,7 +26,10 @@ export const formSchema = z.object({
   publicId: z.string(),
 })
 
-export default function TransformationForm({action, data = null}:TransformationFormProps) {
+export default function TransformationForm({action, data = null, userId, creditBalance, type}:TransformationFormProps) {
+  const transformationType = transformationTypes[type];
+  const [ image, setImage ] = useState(data);
+  const [ newTransformation, setNewTransformation ] = useState<Transformations | null>(null);
 
   const initialValues = data && action === 'Update' ? {
     title: data?.title,
@@ -46,6 +50,21 @@ export default function TransformationForm({action, data = null}:TransformationF
     console.log(values)
   }
 
+  const onSelectFieldHandler = (value: string, onChangeField: (value: string) => void) => {
+    const imageSize = aspectRatioOptions[value as AspectRatioKey]
+
+    setImage((prevState: any) => ({
+      ...prevState,
+      aspectRatio: imageSize.aspectRatio,
+      width: imageSize.width,
+      height: imageSize.height,
+    }))
+
+    setNewTransformation(transformationType.config);
+
+    return onChangeField(value)
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -59,22 +78,31 @@ export default function TransformationForm({action, data = null}:TransformationF
           }
         />
 
-        {/* { type === 'fill' && (
-          <CustomField 
-            render={({field})=>(
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Theme" />
+        {type === 'fill' && (
+          <CustomField
+            control={form.control}
+            name="aspectRatio"
+            formLabel="Aspect Ratio"
+            className="w-full"
+            render={({ field }) => (
+              <Select
+                onValueChange={(value) => onSelectFieldHandler(value, field.onChange)}
+                value={field.value}
+              >
+                <SelectTrigger className="select-field">
+                  <SelectValue placeholder="Select size" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {Object.keys(aspectRatioOptions).map((key) => (
+                    <SelectItem key={key} value={key} className="select-item">
+                      {aspectRatioOptions[key as AspectRatioKey].label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            )}
+            )}  
           />
-        )} */}
+        )}
 
       </form>
     </Form>
